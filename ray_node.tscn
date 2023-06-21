@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cvu54epujrbts"]
+
+[ext_resource type="Script" path="res://ray_node.gd" id="1_qkpx2"]
+[ext_resource type="Texture2D" uid="uid://1rnvsvrmkys7" path="res://circle.png" id="2_l1bmw"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_geihu"]
+
+[node name="RayNode" type="Line2D"]
+width = 4.0
+default_color = Color(0, 0.498039, 0, 1)
+script = ExtResource("1_qkpx2")
+
+[node name="CollisionArea" type="CharacterBody2D" parent="."]
+collision_layer = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="CollisionArea"]
+visible = false
+position = Vector2(-2.01166e-07, -3.09944e-06)
+scale = Vector2(0.00407997, 0.00407997)
+texture = ExtResource("2_l1bmw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionArea"]
+shape = SubResource("CircleShape2D_geihu")
