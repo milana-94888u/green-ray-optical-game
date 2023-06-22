@@ -18,13 +18,33 @@ var right_ray: RayNode = null
 func is_leaf() -> bool:
 	return not (is_instance_valid(left_ray) or is_instance_valid(right_ray))
 
+func _get_own_rectangle() -> Rect2:
+	var top_left := Vector2(min(points[0].x, points[-1].x), min(points[0].y, points[-1].y))
+	var bottom_right := Vector2(max(points[0].x, points[-1].x), max(points[0].y, points[-1].y))
+	return Rect2(top_left, bottom_right - top_left)
+
+func get_rectangle() -> Rect2:
+	if is_leaf():
+		return _get_own_rectangle()
+	var rectangle := Rect2()
+	if is_instance_valid(left_ray):
+		var left_rect := left_ray.get_rectangle()
+		rectangle = rectangle.expand(left_rect.position).expand(left_rect.end)
+	if is_instance_valid(right_ray):
+		var right_rect := right_ray.get_rectangle()
+		rectangle = rectangle.expand(right_rect.position).expand(right_rect.end)
+	return rectangle
+
 func _calculate_distance_from_point(point: Vector2) -> float:
 	var line := points[-1] - points[0]
 	var line0 := points[0] - point
 	var line1 := points[-1] - point
 	if (line.dot(line1)) < 0 or (line.dot(line0)) > 0:
 		return min(line0.length(), line1.length())
-	var triangle_area := absf(line.y * point.x - line.x * point.y + points[-1].x * points[0].y - points[-1].y * points[0].x)
+	var triangle_area := absf(
+		line.y * point.x - line.x * point.y + 
+		points[-1].x * points[0].y - points[-1].y * points[0].x
+		)
 	return triangle_area / line.length()
 
 
