@@ -29,10 +29,16 @@ func get_rectangle() -> Rect2:
 	var rectangle := Rect2()
 	if is_instance_valid(left_ray):
 		var left_rect := left_ray.get_rectangle()
-		rectangle = rectangle.expand(left_rect.position).expand(left_rect.end)
+		if rectangle != Rect2():
+			rectangle = rectangle.expand(left_rect.position).expand(left_rect.end)
+		else:
+			rectangle = left_rect
 	if is_instance_valid(right_ray):
 		var right_rect := right_ray.get_rectangle()
-		rectangle = rectangle.expand(right_rect.position).expand(right_rect.end)
+		if rectangle != Rect2():
+			rectangle = rectangle.expand(right_rect.position).expand(right_rect.end)
+		else:
+			rectangle = right_rect
 	return rectangle
 
 func _calculate_distance_from_point(point: Vector2) -> float:
