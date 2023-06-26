@@ -15,6 +15,7 @@ var left_ray: RayNode = null
 var right_ray: RayNode = null
 
 
+
 func is_leaf() -> bool:
 	return not (is_instance_valid(left_ray) or is_instance_valid(right_ray))
 
@@ -45,7 +46,9 @@ func _calculate_distance_from_point(point: Vector2) -> float:
 	var line := points[-1] - points[0]
 	var line0 := points[0] - point
 	var line1 := points[-1] - point
-	if (line.dot(line1)) < 0 or (line.dot(line0)) > 0:
+
+	# checking if at least one of angles between the ray and the line to the limit point is obtuse
+	if line.dot(line1) < 0 or line.dot(line0) > 0:
 		return min(line0.length(), line1.length())
 	var triangle_area := absf(
 		line.y * point.x - line.x * point.y + 
@@ -65,13 +68,13 @@ func setup(start_point: Vector2, angle: float) -> void:
 	$CollisionArea.position = start_point
 
 
-func find_closest_ray(point: Vector2) -> Array:
+func find_closest_ray(point: Vector2) -> RayDistance:
 	if is_leaf():
-		return [_calculate_distance_from_point(point), self]
+		return RayDistance.new(_calculate_distance_from_point(point), self)
 	if is_instance_valid(left_ray) and is_instance_valid(right_ray):
-		var left_distance_and_ray = left_ray.find_closest_ray(point)
-		var right_distance_and_ray = right_ray.find_closest_ray(point)
-		if left_distance_and_ray[0] < right_distance_and_ray[0]:
+		var left_distance_and_ray := left_ray.find_closest_ray(point)
+		var right_distance_and_ray := right_ray.find_closest_ray(point)
+		if left_distance_and_ray.distance < right_distance_and_ray.distance:
 			return left_distance_and_ray
 		return right_distance_and_ray
 	if is_instance_valid(left_ray):
