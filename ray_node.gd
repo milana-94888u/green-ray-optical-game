@@ -1,5 +1,4 @@
 extends Line2D
-
 class_name RayNode
 
 const packed_ray_scene := preload("res://ray_node.tscn")
@@ -15,14 +14,15 @@ var left_ray: RayNode = null
 var right_ray: RayNode = null
 
 
-
 func is_leaf() -> bool:
 	return not (is_instance_valid(left_ray) or is_instance_valid(right_ray))
+
 
 func _get_own_rectangle() -> Rect2:
 	var top_left := Vector2(min(points[0].x, points[-1].x), min(points[0].y, points[-1].y))
 	var bottom_right := Vector2(max(points[0].x, points[-1].x), max(points[0].y, points[-1].y))
 	return Rect2(top_left, bottom_right - top_left)
+
 
 func get_rectangle() -> Rect2:
 	if is_leaf():
@@ -41,6 +41,7 @@ func get_rectangle() -> Rect2:
 		else:
 			rectangle = right_rect
 	return rectangle
+
 
 func _calculate_distance_from_point(point: Vector2) -> float:
 	var line := points[-1] - points[0]
@@ -100,12 +101,6 @@ func destroy_by_user() -> void:
 	queue_free()
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if is_leaf():
 		score += 1
